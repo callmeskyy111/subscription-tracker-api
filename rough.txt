@@ -1,0 +1,9 @@
+{
+  "name": "Javascript Mastery Elite Membership",
+  "price": 139.00,
+  "currency": "USD",
+  "frequency": "monthly",
+  "category": "Entertainment",
+  "startDate": "2025-01-20T00:00:00.000Z",
+  "paymentMethod": "Credit Card"
+}
