@@ -49,6 +49,36 @@ export async function signUp(req, res, next) {
   }
 }
 
-export async function signIn(req, res, next) {}
+export async function signIn(req, res, next) {
+  try {
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found 🔴" });
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid password 🔴" });
+    }
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+    });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "User signed in successfully ✅",
+        data: { token, user },
+      });
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ success: false, message: error.message });
+    next(error);
+  }
+}
 
 export async function signOut(req, res, next) {}

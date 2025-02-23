@@ -1,4 +1,9 @@
 import { Router } from "express";
+import authorize from "../middlewares/auth.middleware.js";
+import {
+  createSubscription,
+  getUserSubscriptions,
+} from "../controllers/subscription.controller.js";
 
 const subscriptionRouter = Router();
 
@@ -8,18 +13,8 @@ subscriptionRouter.get("/", (req, res) => {
     .json({ success: true, message: "Fetch/GET all subscriptions ✅" });
 });
 
-subscriptionRouter.get("/:id", (req, res) => {
-  //const { id } = req.params;
-  res
-    .status(200)
-    .json({ success: true, message: `Fetch/GET subscription with ID --- ✅` });
-});
-
-subscriptionRouter.post("/", (req, res) => {
-  res
-    .status(201)
-    .json({ success: true, message: "Create/POST new subscription ✅" });
-});
+subscriptionRouter.get("/user/:id", authorize, getUserSubscriptions);
+subscriptionRouter.post("/", authorize, createSubscription);
 
 subscriptionRouter.put("/:id", (req, res) => {
   //const { id } = req.params;
@@ -55,12 +50,10 @@ subscriptionRouter.put("/:id/cancel", (req, res) => {
 
 // Fetch upcoming subscriptions/renewals
 subscriptionRouter.get("/upcoming", (req, res) => {
-  res
-    .status(200)
-    .json({
-      success: true,
-      message: "Fetch/GET upcoming subscriptions/renewals ✅",
-    });
+  res.status(200).json({
+    success: true,
+    message: "Fetch/GET upcoming subscriptions/renewals ✅",
+  });
 });
 
 export default subscriptionRouter;
